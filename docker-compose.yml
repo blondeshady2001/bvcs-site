@@ -1,0 +1,17 @@
+nginxproxy:
+  image: jwilder/nginx-proxy
+  restart: always
+  ports:
+    - "80:80"
+  volumes:
+    - "/var/run/docker.sock:/tmp/docker.sock"
+
+bvch:
+  build: .
+  restart: always
+  expose:
+    - "80"
+#    - "443"
+  environment:
+    VIRTUAL_HOST: bvchoralsociety.org www.bvchoralsociety.org
+    VIRTUAL_PORT: 80
