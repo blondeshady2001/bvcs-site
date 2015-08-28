@@ -1,0 +1,48 @@
+---
+name: dv.dfs-platform
+description: ''
+keywords: ''
+type: Default
+documentation: ''
+images:
+- name: nginx-proxy_latest
+  source: jwilder/nginx-proxy:latest
+  category: Support
+  type: Default
+  ports:
+  - host_port: '80'
+    container_port: '80'
+    proto: TCP
+  environment:
+  - variable: DEFAULT_HOST
+    value: dfs.panamax.dev
+  volumes:
+  - host_path: "/var/run/docker.sock"
+    container_path: "/tmp/docker.sock"
+- name: mysql_mysql-server
+  source: mysql/mysql-server:latest
+  category: Databases
+  type: Default
+  ports:
+  - host_port: '3306'
+    container_port: '3306'
+    proto: TCP
+  environment:
+  - variable: MYSQL_ROOT_PASSWORD
+    value: bcgdv2015
+  - variable: MYSQL_DATABASE
+    value: autogravity
+- name: rossbachp_apache-tomcat8
+  source: rossbachp/apache-tomcat8:latest
+  category: Support
+  type: Default
+  links:
+  - service: mysql_mysql-server
+    alias: mysql
+  environment:
+  - variable: VIRTUAL_HOST
+    value: dfs.panamax.dev
+  - variable: VIRTUAL_PORT
+    value: '8080'
+  - variable: TOMCAT_PASS
+    value: bcgdv-dv2
